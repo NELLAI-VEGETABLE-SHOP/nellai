@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { signUp, signInWithGoogle } from "@/lib/auth-fixed"
+import { signUp, signInWithGoogle } from "@/lib/auth"
 import { useAuth } from "@/components/auth-context"
 import { toast } from "@/hooks/use-toast"
 

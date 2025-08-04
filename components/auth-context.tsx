@@ -11,7 +11,7 @@ import {
   type GuestUser,
   type AuthenticatedUser,
   handleAuthCallback
-} from '@/lib/auth-fixed'
+} from '@/lib/auth'
 import { migrateGuestCart } from '@/lib/cart-fixed'
 
 interface AuthContextType {
