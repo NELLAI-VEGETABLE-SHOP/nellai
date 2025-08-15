@@ -173,7 +173,7 @@ export default function OrderPage({ params }: OrderPageProps) {
                     <h3 className="font-medium">{item.products?.name}</h3>
                     <p className="text-sm text-gray-600">
                       {item.quantity} {item.products?.unit}
-                      {item.quantity > 1 ? "s" : ""} × ₹{item.unit_price.toFixed(2)}
+                      {item.quantity > 1 ? "s" : ""} {item.weight && `(${item.weight})`} × ₹{item.unit_price.toFixed(2)}
                     </p>
                   </div>
                   <div className="text-right">

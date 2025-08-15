@@ -10,9 +10,11 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
 import ProductCard from "@/components/product-card"
 import { getProduct, getProducts } from "@/lib/products-fixed"
-import { addToCart } from "@/lib/cart-fixed"
+import { addToCart } from "@/lib/cart"
 import type { Product } from "@/lib/supabase"
 import { supabase } from "@/lib/supabase"
 import { toast } from "@/hooks/use-toast"
@@ -24,6 +26,8 @@ export default function ProductDetailPage() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
+  const [weight, setWeight] = useState("1kg")
+  const [customWeight, setCustomWeight] = useState("")
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
 
@@ -102,10 +106,11 @@ export default function ProductDetailPage() {
 
     setIsAddingToCart(true)
     try {
-      await addToCart(user.id, product.id, quantity)
+      const finalWeight = weight === "custom" ? customWeight : weight
+      await addToCart(user.id, product.id, quantity, finalWeight)
       toast({
         title: "Added to cart",
-        description: `${quantity} ${product.unit}${quantity > 1 ? "s" : ""} of ${product.name} added to cart.`,
+        description: `${quantity} ${product.unit}${quantity > 1 ? "s" : ""} of ${product.name} (${finalWeight}) added to cart.`,
       })
     } catch (error) {
       console.error("Error adding to cart:", error)
@@ -272,32 +277,64 @@ export default function ProductDetailPage() {
             </p>
           </div>
 
-          {/* Quantity Selector */}
+          {/* Quantity & Weight Selector */}
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">Quantity</label>
-              <div className="flex items-center gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="text-lg font-semibold w-12 text-center">{quantity}</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
-                  disabled={quantity >= product.stock_quantity}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-                <span className="text-sm text-gray-500 ml-2">
-                  {product.unit}
-                  {quantity > 1 ? "s" : ""}
-                </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">Quantity</label>
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="text-lg font-semibold w-12 text-center">{quantity}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setQuantity(Math.min(product.stock_quantity, quantity + 1))}
+                    disabled={quantity >= product.stock_quantity}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm text-gray-500 ml-2">
+                    {product.unit}
+                    {quantity > 1 ? "s" : ""}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="weight-select" className="text-sm font-medium text-gray-700 mb-2 block">
+                  Weight
+                </label>
+                <Select value={weight} onValueChange={setWeight}>
+                  <SelectTrigger id="weight-select">
+                    <SelectValue placeholder="Select weight" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="50g">50g</SelectItem>
+                    <SelectItem value="100g">100g</SelectItem>
+                    <SelectItem value="250g">250g</SelectItem>
+                    <SelectItem value="500g">500g</SelectItem>
+                    <SelectItem value="1kg">1kg</SelectItem>
+                    <SelectItem value="5kg">5kg</SelectItem>
+                    <SelectItem value="10kg">10kg</SelectItem>
+                    <SelectItem value="20kg">20kg</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
+                  </SelectContent>
+                </Select>
+                {weight === "custom" && (
+                  <Input
+                    type="text"
+                    placeholder="Enter custom weight (e.g., 1.5kg)"
+                    value={customWeight}
+                    onChange={(e) => setCustomWeight(e.target.value)}
+                    className="mt-2"
+                  />
+                )}
               </div>
             </div>
 

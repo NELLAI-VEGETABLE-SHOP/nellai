@@ -21,7 +21,7 @@ export const getCartItems = async (userId: string) => {
   return data as CartItem[]
 }
 
-export const addToCart = async (userId: string, productId: string, quantity = 1) => {
+export const addToCart = async (userId: string, productId: string, quantity = 1, weight: string) => {
   // Check if item already exists in cart
   const { data: existingItem } = await supabase
     .from("cart_items")
@@ -36,6 +36,7 @@ export const addToCart = async (userId: string, productId: string, quantity = 1)
       .from("cart_items")
       .update({
         quantity: existingItem.quantity + quantity,
+        weight: weight,
         updated_at: new Date().toISOString(),
       })
       .eq("id", existingItem.id)
@@ -53,6 +54,7 @@ export const addToCart = async (userId: string, productId: string, quantity = 1)
           user_id: userId,
           product_id: productId,
           quantity,
+          weight: weight,
         },
       ])
       .select()
@@ -63,7 +65,7 @@ export const addToCart = async (userId: string, productId: string, quantity = 1)
   }
 }
 
-export const updateCartItem = async (itemId: string, quantity: number) => {
+export const updateCartItem = async (itemId: string, quantity: number, weight: string) => {
   if (quantity <= 0) {
     return removeFromCart(itemId)
   }
@@ -72,6 +74,7 @@ export const updateCartItem = async (itemId: string, quantity: number) => {
     .from("cart_items")
     .update({
       quantity,
+      weight: weight,
       updated_at: new Date().toISOString(),
     })
     .eq("id", itemId)

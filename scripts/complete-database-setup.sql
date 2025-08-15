@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS cart_items (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   product_id UUID REFERENCES products(id) ON DELETE CASCADE,
   quantity INTEGER NOT NULL DEFAULT 1,
+  weight TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(user_id, product_id)
@@ -104,6 +105,7 @@ CREATE TABLE IF NOT EXISTS order_items (
   quantity INTEGER NOT NULL,
   unit_price DECIMAL(10,2) NOT NULL,
   total_price DECIMAL(10,2) NOT NULL,
+  weight TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
