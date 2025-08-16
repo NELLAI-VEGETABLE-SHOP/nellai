@@ -19,7 +19,7 @@ async function runMigration() {
     console.log('Running migration to add missing columns to orders table...');
     
     // Read the SQL file
-    const sqlPath = path.join(__dirname, '07-add-order-total-columns.sql');
+    const sqlPath = path.join(__dirname, '08-add-weight-column.sql');
     const sqlContent = fs.readFileSync(sqlPath, 'utf8');
     
     console.log('SQL content:');

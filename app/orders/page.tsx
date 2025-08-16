@@ -194,7 +194,7 @@ export default function OrdersPage() {
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{item.products?.name}</p>
                       <p className="text-xs text-gray-600">
-                        Qty: {item.quantity} × ₹{item.unit_price.toFixed(2)}
+                        Qty: {item.quantity} {item.weight && `(${item.weight})`} × ₹{item.unit_price.toFixed(2)}
                       </p>
                     </div>
                     <div className="text-sm font-medium">₹{item.total_price.toFixed(2)}</div>
